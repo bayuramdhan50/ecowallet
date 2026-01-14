@@ -14,6 +14,8 @@ class TransactionService {
     required int wasteTypeId,
     required double estimatedWeight,
     File? photo,
+    double? latitude,
+    double? longitude,
   }) async {
     try {
       final token = await _authService.getToken();
@@ -29,6 +31,14 @@ class TransactionService {
       request.headers['Authorization'] = 'Bearer $token';
       request.fields['waste_type_id'] = wasteTypeId.toString();
       request.fields['estimated_weight'] = estimatedWeight.toString();
+
+      // Add location data if provided
+      if (latitude != null) {
+        request.fields['latitude'] = latitude.toString();
+      }
+      if (longitude != null) {
+        request.fields['longitude'] = longitude.toString();
+      }
 
       if (photo != null) {
         request.files.add(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'config/app_colors.dart';
 import 'providers/auth_provider.dart';
@@ -9,7 +11,26 @@ import 'screens/auth/login_screen.dart';
 import 'screens/client/home_screen.dart';
 import 'screens/admin/admin_home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase (only if not already initialized)
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    print('Firebase initialized successfully');
+  } on FirebaseException catch (e) {
+    if (e.code == 'duplicate-app') {
+      print('Firebase already initialized, skipping...');
+    } else {
+      print('Firebase initialization error: $e');
+    }
+  } catch (e) {
+    print('Firebase initialization error: $e');
+    // Continue anyway - app will work except chat feature
+  }
+
   runApp(const MyApp());
 }
 

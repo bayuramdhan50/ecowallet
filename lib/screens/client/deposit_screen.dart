@@ -8,6 +8,8 @@ import '../../models/waste_type.dart';
 import '../../services/waste_type_service.dart';
 import '../../services/transaction_service.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
+import 'map_picker_screen.dart';
 
 /// Deposit Screen - Submit Waste Deposit Request
 class DepositScreen extends StatefulWidget {
@@ -29,6 +31,7 @@ class _DepositScreenState extends State<DepositScreen> {
   bool _isLoading = false;
   bool _isLoadingWasteTypes = true;
   double _estimatedEarning = 0.0;
+  LatLng? _selectedLocation; // Map location
 
   @override
   void initState() {
@@ -81,6 +84,21 @@ class _DepositScreenState extends State<DepositScreen> {
     }
   }
 
+  Future<void> _pickLocation() async {
+    final LatLng? location = await Navigator.push<LatLng>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => MapPickerScreen(initialLocation: _selectedLocation),
+      ),
+    );
+
+    if (location != null) {
+      setState(() {
+        _selectedLocation = location;
+      });
+    }
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedWasteType == null) {
@@ -96,6 +114,8 @@ class _DepositScreenState extends State<DepositScreen> {
       wasteTypeId: _selectedWasteType!.id,
       estimatedWeight: weight,
       photo: _selectedImage,
+      latitude: _selectedLocation?.latitude,
+      longitude: _selectedLocation?.longitude,
     );
 
     setState(() => _isLoading = false);
@@ -261,6 +281,69 @@ class _DepositScreenState extends State<DepositScreen> {
                                   ),
                                 ],
                               ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Location picker (Optional)
+                    InkWell(
+                      onTap: _pickLocation,
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: _selectedLocation != null
+                              ? AppColors.primary.withOpacity(0.1)
+                              : AppColors.surface,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: _selectedLocation != null
+                                ? AppColors.primary
+                                : AppColors.border,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              _selectedLocation != null
+                                  ? Icons.location_on
+                                  : Icons.add_location,
+                              color: _selectedLocation != null
+                                  ? AppColors.primary
+                                  : Colors.grey[600],
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _selectedLocation != null
+                                        ? 'Location Selected'
+                                        : 'Add Deposit Location (Optional)',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: _selectedLocation != null
+                                          ? AppColors.primary
+                                          : AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  if (_selectedLocation != null)
+                                    const SizedBox(height: 4),
+                                  if (_selectedLocation != null)
+                                    Text(
+                                      'Lat: ${_selectedLocation!.latitude.toStringAsFixed(6)}\nLng: ${_selectedLocation!.longitude.toStringAsFixed(6)}',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                            Icon(Icons.chevron_right, color: Colors.grey[400]),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 24),

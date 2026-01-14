@@ -51,9 +51,11 @@ class AuthService {
         final String token = data['data']['token'];
         final User user = User.fromJson(data['data']['user']);
 
-        // Save token to local storage
+        // Save token and user data to local storage
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', token);
+        await prefs.setString('token', token); // For analytics service
+        await prefs.setString('userId', user.id.toString()); // For chat service
         await prefs.setString('user_data', json.encode(user.toJson()));
 
         return {
@@ -91,6 +93,8 @@ class AuthService {
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth_token');
+    await prefs.remove('token');
+    await prefs.remove('userId');
     await prefs.remove('user_data');
   }
 
