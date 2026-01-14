@@ -6,6 +6,8 @@ import 'user_approval_screen.dart';
 import 'waste_type_management_screen.dart';
 import 'transaction_validation_screen.dart';
 import '../auth/login_screen.dart';
+import 'analytics_screen.dart';
+import 'admin_chat_list_screen.dart';
 
 /// Admin Home Screen - Dashboard with Admin Features
 class AdminHomeScreen extends StatelessWidget {
@@ -178,6 +180,36 @@ class AdminHomeScreen extends StatelessWidget {
               MaterialPageRoute(
                 builder: (_) => const TransactionValidationScreen(),
               ),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+
+        // Analytics Dashboard (NEW)
+        _buildFeatureCard(
+          context: context,
+          icon: Icons.analytics,
+          title: 'Analytics Dashboard',
+          subtitle: 'View statistics and charts',
+          color: Colors.purple,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const AdminAnalyticsScreen()),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+
+        // Client Messages (NEW)
+        _buildFeatureCard(
+          context: context,
+          icon: Icons.chat,
+          title: 'Client Messages',
+          subtitle: 'Chat with clients',
+          color: Colors.blue,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const AdminChatListScreen()),
             );
           },
         ),

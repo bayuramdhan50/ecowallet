@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const wasteTypeRoutes = require('./routes/wasteTypes');
 const transactionRoutes = require('./routes/transactions');
+const analyticsRoutes = require('./routes/analytics');
 
 // Import database for connection test
 require('./config/database');
@@ -28,6 +29,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/waste-types', wasteTypeRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -49,6 +51,7 @@ app.get('/', (req, res) => {
             users: '/api/users',
             wasteTypes: '/api/waste-types',
             transactions: '/api/transactions',
+            analytics: '/api/analytics',
             health: '/api/health'
         }
     });

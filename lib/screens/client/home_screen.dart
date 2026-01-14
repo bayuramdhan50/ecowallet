@@ -9,6 +9,8 @@ import '../../widgets/news_card.dart';
 import 'deposit_screen.dart';
 import 'transaction_history_screen.dart';
 import 'about_screen.dart';
+import 'client_analytics_screen.dart';
+import 'chat_screen.dart';
 import '../auth/login_screen.dart';
 
 /// Client Home Screen - Dashboard with Balance & NewsAPI Integration
@@ -231,6 +233,34 @@ class _ClientHomeScreenState extends State<ClientHomeScreen> {
                   builder: (_) => const TransactionHistoryScreen(),
                 ),
               );
+            },
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildActionButton(
+            icon: Icons.analytics,
+            label: 'Analytics',
+            color: Colors.purple,
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const ClientAnalyticsScreen(),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildActionButton(
+            icon: Icons.chat,
+            label: 'Chat',
+            color: Colors.blue,
+            onTap: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const ChatScreen()));
             },
           ),
         ),
